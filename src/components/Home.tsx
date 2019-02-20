@@ -20,7 +20,7 @@ const store = new TestStore();
 export default class Home extends React.Component<undefined, undefined> {
   render() {
     return (
-      <div>
+      <div className="test">
         <h2>Welcome to React with Typescript! {store.counter}</h2>
         <button onClick={() => store.increment()}>hello</button>
         <Link to="/help">More Info</Link>
