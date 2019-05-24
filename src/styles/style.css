@@ -15,4 +15,13 @@ circle {
   transform: rotate(-90deg);
   stroke-width: 10;
   stroke: #008000;
+  transition: stroke-dashoffset 1s linear;
+}
+
+#time-label {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 2em;
+  fill: red;
+  margin: 0 auto;
+  border: 1px solid blue;
 }

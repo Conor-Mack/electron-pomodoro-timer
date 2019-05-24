@@ -1,7 +1,9 @@
 import * as React from "react";
 
+import TimerStore, { TimeInteval } from "../stores/timer-store";
+
 import { Link } from "react-router-dom";
-import TimerStore from "../stores/timer-store";
+import { TimerUIStoreModel } from "../stores/timer-ui-store";
 import { action } from "mobx";
 import { observer } from "mobx-react";
 
@@ -10,20 +12,27 @@ export default class PomodoroTimer extends React.Component<
   undefined,
   undefined
 > {
-  TimerStore: TimerStore;
+  timerStore: TimerStore;
+
+  progressCircle: React.RefObject<SVGElement>;
 
   constructor(props) {
     super(props);
-    this.progressCircle = React.createRef();
-  }
-
-  componentDidMount() {
-    let radius: number = Number(this.progressCircle.current.getAttribute("r"));
-    let circumference: number = 2 * Math.PI * radius;
-    this.TimerStore = new TimerStore({ radius, circumference });
+    this.progressCircle = React.createRef<SVGElement>();
+    const timeInterval: TimeInteval = { hours: 0, minutes: 0, seconds: 5 };
+    this.timerStore = new TimerStore(timeInterval);
   }
 
   render() {
+    let { getDashValue, getReadableTime } = this.timerStore;
+    if (!!this.progressCircle.current) {
+      this.progressCircle.current.style.setProperty(
+        "stroke-dashoffset",
+        getDashValue
+      );
+      console.log(this.progressCircle.current.style.strokeDashoffset);
+    }
+
     return (
       <div className="test">
         <svg>
@@ -36,7 +45,9 @@ export default class PomodoroTimer extends React.Component<
             r="90"
             fill="none"
           />
-          <text id="time-label" x="105" y="160" />
+          <text id="time-label" x="105" y="160">
+            {getReadableTime}
+          </text>
         </svg>
       </div>
     );
