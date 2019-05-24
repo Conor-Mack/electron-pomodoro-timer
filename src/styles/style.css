@@ -1,3 +1,21 @@
-body {
-  background-color: rgb(180, 199, 214);
+svg {
+  border: 1px solid red;
+  height: 300px;
+  width: 300px;
+}
+circle {
+  stroke-dashoffset: 0;
+  stroke-dasharray: 565;
+  stroke: #c6c4c4;
+  stroke-width: 10;
+}
+
+#progress-circle {
+  transform-origin: center center;
+  transform: rotate(-90deg);
+  stroke-width: 10;
+}
+
+.prog-circ {
+  stroke: #008000;
 }
