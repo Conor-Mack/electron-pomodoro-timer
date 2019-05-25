@@ -34,7 +34,6 @@ class TimerStore {
   startTimer() {
     return new Promise(resolve => {
       this.timerFn = setInterval(() => {
-        debugger;
         if (this.elapsedTime > 1) {
           this.elapsedTime--;
         } else {
@@ -62,16 +61,23 @@ class TimerStore {
   get getDashValue() {
     const { startTime, elapsedTime, timerUIStore } = this;
     const { circleCircumference } = timerUIStore;
-    let dash = ((startTime - elapsedTime) / startTime) * circleCircumference;
-    return dash;
+    //Slight hack to make timer consistant with readable time - need better way
+    let startTimeMod = startTime - 1;
+    let elapsedTimeMod = elapsedTime - 1;
+    let dash =
+      ((startTimeMod - elapsedTimeMod) / startTimeMod) * circleCircumference;
+    if (dash <= circleCircumference) {
+      return dash;
+    }
   }
 
   @computed
   get getReadableTime() {
     const { elapsedTime } = this;
-    let hours = Math.floor(elapsedTime / 3600);
-    let minutes = Math.floor((elapsedTime / 60) % 60);
-    let seconds = elapsedTime % 60;
+    let elTime = elapsedTime;
+    let hours = Math.floor(elTime / 3600);
+    let minutes = Math.floor((elTime / 60) % 60);
+    let seconds = elTime % 60;
     let timerArr = hours > 0 ? [hours, minutes, seconds] : [minutes, seconds];
     return this.constructReadableTime(timerArr);
   }

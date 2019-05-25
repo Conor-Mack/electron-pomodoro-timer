@@ -19,7 +19,7 @@ export default class PomodoroTimer extends React.Component<
   constructor(props) {
     super(props);
     this.progressCircle = React.createRef<SVGElement>();
-    const timeInterval: TimeInteval = { hours: 0, minutes: 0, seconds: 5 };
+    const timeInterval: TimeInteval = { hours: 0, minutes: 0, seconds: 15 };
     this.timerStore = new TimerStore(timeInterval);
   }
 
@@ -30,7 +30,6 @@ export default class PomodoroTimer extends React.Component<
         "stroke-dashoffset",
         getDashValue
       );
-      console.log(this.progressCircle.current.style.strokeDashoffset);
     }
 
     return (
