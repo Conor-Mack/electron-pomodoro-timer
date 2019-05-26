@@ -1,6 +1,5 @@
-import { action, observable } from "mobx";
-
-import TimerStore from "./timer-store";
+import TimerStore, { TimeInteval } from "./timer-store";
+import { action, computed, observable } from "mobx";
 
 class PomodoroStore {
   @observable workTimeDuration: number = 20;
@@ -10,29 +9,49 @@ class PomodoroStore {
 
   @observable activeTimer: TimerStore | null = null;
 
-  @action
-  startWork() {
-    //initialize active timer with work time value
+  //TODO remoe this
+  @observable testValue: number = 0;
+  @action.bound
+  incrementTestVal() {
+    this.testValue++;
   }
 
   @action
-  startBreak() {
-    //initialize active timer with break time value
+  instantiateTimer(isWorkTime: boolean) {
+    let timeInterval: TimeInteval = isWorkTime
+      ? { seconds: this.workTimeDuration }
+      : { seconds: this.breakTimeDuration };
+    this.activeTimer = new TimerStore(timeInterval);
+  }
+
+  @action
+  startTimer() {
+    const { timerExists, activeTimer } = this;
+    if (timerExists) {
+      activeTimer!.startTimer();
+    }
   }
 
   @action
   pauseTimer() {
-    //pause active timer
+    const { activeTimer } = this;
+    activeTimer!.pauseTimer();
   }
 
   @action
   stopTimer() {
-    // current timer
+    const { activeTimer } = this;
+    activeTimer!.stopTimer();
   }
 
   @action
   incrementElapsedSets() {
     this.elapsedPomodoroSets++;
+  }
+
+  @computed
+  get timerExists() {
+    return this.activeTimer !== null;
   }
 }
 

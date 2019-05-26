@@ -33,7 +33,6 @@ export class App extends React.Component<undefined, undefined> {
               render={props => (
                 <PomodoroScreen {...props} pomodoroStore={this.pomodoroStore} />
               )}
-              something="Im something else"
             />
           </Switch>
         </MemoryRouter>

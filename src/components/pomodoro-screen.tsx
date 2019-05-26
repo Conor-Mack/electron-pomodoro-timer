@@ -2,17 +2,22 @@ import * as React from "react";
 
 import TimerStore, { TimeInteval } from "../stores/timer-store";
 
+import { Link } from "react-router-dom";
+import PomodoroStore from "../stores/pomodoro-store";
 import { observer } from "mobx-react";
 
+interface IPomodoroScreenProps {
+  pomodoroStore: PomodoroStore;
+}
+
 @observer
-class PomodoroScreen extends React.Component<undefined, undefined> {
+class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
   timerStore: TimerStore;
 
   progressCircle: React.RefObject<SVGElement>;
 
   constructor(props) {
     super(props);
-    debugger;
     this.progressCircle = React.createRef<SVGElement>();
     const timeInterval: TimeInteval = { hours: 0, minutes: 0, seconds: 15 };
     this.timerStore = new TimerStore(timeInterval);
@@ -20,6 +25,8 @@ class PomodoroScreen extends React.Component<undefined, undefined> {
 
   render() {
     let { getDashValue, getReadableTime } = this.timerStore;
+    let { testValue, incrementTestVal } = this.props.pomodoroStore;
+
     if (!!this.progressCircle.current) {
       this.progressCircle.current.style.setProperty(
         "stroke-dashoffset",
@@ -29,6 +36,10 @@ class PomodoroScreen extends React.Component<undefined, undefined> {
 
     return (
       <div className="test">
+        <Link to="/settings">Settings</Link>
+        <span>{testValue}</span>
+        <button onClick={() => incrementTestVal()}>Incrememt test</button>
+
         <svg>
           <circle cx="150" cy="150" r="90" fill="none" />
           <circle
