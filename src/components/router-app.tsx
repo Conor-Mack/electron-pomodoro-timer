@@ -3,7 +3,7 @@ import * as React from "react";
 import { MemoryRouter, Route, Switch } from "react-router";
 
 import Help from "./Help";
-import PomodoroTimer from "./PomodoroTimer";
+import PomodoroScreen from "./pomodoro-screen";
 
 export default class RouterApp extends React.Component {
   render() {
@@ -11,7 +11,7 @@ export default class RouterApp extends React.Component {
       <MemoryRouter>
         <Switch>
           <Route path="/help" component={Help} />
-          <Route path="/" component={PomodoroTimer} />
+          <Route path="/" component={PomodoroScreen} />
         </Switch>
       </MemoryRouter>
     );

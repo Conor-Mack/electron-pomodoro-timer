@@ -2,22 +2,17 @@ import * as React from "react";
 
 import TimerStore, { TimeInteval } from "../stores/timer-store";
 
-import { Link } from "react-router-dom";
-import { TimerUIStoreModel } from "../stores/timer-ui-store";
-import { action } from "mobx";
 import { observer } from "mobx-react";
 
 @observer
-export default class PomodoroTimer extends React.Component<
-  undefined,
-  undefined
-> {
+class PomodoroScreen extends React.Component<undefined, undefined> {
   timerStore: TimerStore;
 
   progressCircle: React.RefObject<SVGElement>;
 
   constructor(props) {
     super(props);
+    debugger;
     this.progressCircle = React.createRef<SVGElement>();
     const timeInterval: TimeInteval = { hours: 0, minutes: 0, seconds: 15 };
     this.timerStore = new TimerStore(timeInterval);
@@ -52,3 +47,5 @@ export default class PomodoroTimer extends React.Component<
     );
   }
 }
+
+export default PomodoroScreen;

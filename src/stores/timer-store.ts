@@ -72,7 +72,7 @@ class TimerStore {
   }
 
   @computed
-  get getReadableTime() {
+  get getReadableTime(): string {
     const { elapsedTime } = this;
     let elTime = elapsedTime;
     let hours = Math.floor(elTime / 3600);
