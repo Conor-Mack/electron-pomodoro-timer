@@ -23,9 +23,17 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
     this.timerStore = new TimerStore(timeInterval);
   }
 
+  componentDidMount() {
+    const { pomodoroStore } = this.props;
+    pomodoroStore.managePomodoro();
+  }
+
   render() {
-    let { getDashValue, getReadableTime } = this.timerStore;
-    let { testValue, incrementTestVal } = this.props.pomodoroStore;
+    let {
+      getDashValue,
+      getReadableTime
+    } = this.props.pomodoroStore.activeTimer;
+    console.log(getDashValue, getReadableTime);
 
     if (!!this.progressCircle.current) {
       this.progressCircle.current.style.setProperty(
@@ -36,10 +44,6 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
 
     return (
       <div className="test">
-        <Link to="/settings">Settings</Link>
-        <span>{testValue}</span>
-        <button onClick={() => incrementTestVal()}>Incrememt test</button>
-
         <svg>
           <circle cx="150" cy="150" r="90" fill="none" />
           <circle

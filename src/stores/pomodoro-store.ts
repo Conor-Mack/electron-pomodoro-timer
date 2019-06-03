@@ -9,14 +9,11 @@ class PomodoroStore {
 
   @observable activeTimer: TimerStore | null = null;
 
-  //TODO remoe this
-  @observable testValue: number = 0;
-  @action.bound
-  incrementTestVal() {
-    this.testValue++;
+  constructor() {
+    this.instantiateTimer(true);
   }
 
-  @action
+  @action.bound
   instantiateTimer(isWorkTime: boolean) {
     let timeInterval: TimeInteval = isWorkTime
       ? { seconds: this.workTimeDuration }
@@ -25,10 +22,23 @@ class PomodoroStore {
   }
 
   @action
-  startTimer() {
+  async managePomodoro() {
+    //FIX ME - I don't work. Instantiating both times at at the same time instead of waiting
+    // Could use separate methods like in the web version
+    if (!this.timerExists) {
+      this.instantiateTimer(true);
+    }
+    await this.activeTimer!.startTimer();
+    this.instantiateTimer(false);
+    await this.activeTimer!.startTimer();
+  }
+
+  @action
+  async startTimer() {
     const { timerExists, activeTimer } = this;
     if (timerExists) {
-      activeTimer!.startTimer();
+      await activeTimer!.startTimer();
+      return true;
     }
   }
 

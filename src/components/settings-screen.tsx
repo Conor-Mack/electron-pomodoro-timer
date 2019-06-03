@@ -11,12 +11,9 @@ interface ISettingsScreenProps {
 @observer
 class SettingsScreen extends React.Component<ISettingsScreenProps> {
   render() {
-    let { testValue, incrementTestVal } = this.props.pomodoroStore;
     return (
       <div>
-        <span>{testValue}</span>
-        <button onClick={() => incrementTestVal()}>Incrememt test</button>
-        <Link to="/">Home</Link>
+        <span>Settings</span>
       </div>
     );
   }

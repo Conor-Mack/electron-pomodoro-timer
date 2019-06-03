@@ -27,7 +27,10 @@ class TimerStore {
   @action
   private convertToSeconds(interval: TimeInteval): number {
     const { hours, minutes, seconds } = interval;
-    return hours! * 60 * 60 + minutes! * 60 + seconds;
+    let durationInSeconds = hours || 0 * 60 * 60;
+    durationInSeconds += minutes || 0 * 60;
+    durationInSeconds += seconds;
+    return durationInSeconds;
   }
 
   @action.bound
