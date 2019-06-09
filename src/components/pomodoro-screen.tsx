@@ -20,12 +20,13 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
     super(props);
     this.progressCircle = React.createRef<SVGElement>();
     const timeInterval: TimeInteval = { hours: 0, minutes: 0, seconds: 15 };
-    this.timerStore = new TimerStore(timeInterval);
+    const uiState = { circleRef: this.progressCircle };
+    this.timerStore = new TimerStore(timeInterval, uiState);
   }
 
   componentDidMount() {
     const { pomodoroStore } = this.props;
-    pomodoroStore.managePomodoro();
+    pomodoroStore.managePomodoro(this.progressCircle);
   }
 
   render() {

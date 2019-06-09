@@ -15,7 +15,8 @@ circle {
   transform: rotate(-90deg);
   stroke-width: 10;
   stroke: #008000;
-  transition: stroke-dashoffset 1s linear;
+  opacity: 0;
+  transition: stroke-dashoffset 1s linear, opacity 1s ease-in;
 }
 
 #time-label {

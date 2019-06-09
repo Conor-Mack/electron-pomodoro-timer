@@ -1,6 +1,8 @@
 import TimerStore, { TimeInteval } from "./timer-store";
 import { action, computed, observable } from "mobx";
 
+import React from "react";
+
 class PomodoroStore {
   @observable workTimeDuration: number = 20;
   @observable breakTimeDuration: number = 5;
@@ -22,24 +24,29 @@ class PomodoroStore {
   }
 
   @action
-  async managePomodoro() {
+  async managePomodoro(circleRef: React.RefObject<SVGElement>) {
     //FIX ME - I don't work. Instantiating both times at at the same time instead of waiting
     // Could use separate methods like in the web version
+    console.log("circleRef", circleRef);
+    await this.startWorkTimer(circleRef);
+    await this.startBreakTimer(circleRef);
+  }
+
+  @action
+  async startWorkTimer(circleRef: React.RefObject<SVGElement>) {
+    debugger;
+    circleRef.current.style.opacity = 1;
     if (!this.timerExists) {
       this.instantiateTimer(true);
     }
     await this.activeTimer!.startTimer();
-    this.instantiateTimer(false);
-    await this.activeTimer!.startTimer();
   }
 
   @action
-  async startTimer() {
-    const { timerExists, activeTimer } = this;
-    if (timerExists) {
-      await activeTimer!.startTimer();
-      return true;
-    }
+  async startBreakTimer(circleRef: React.RefObject<SVGElement>) {
+    this.instantiateTimer(false);
+    circleRef.current.style.opacity = 1;
+    await this.activeTimer!.startTimer();
   }
 
   @action

@@ -13,15 +13,13 @@ class TimerStore {
   @observable elapsedTime: number = 0;
   timerFn: () => {};
 
-  constructor(
-    timeInteral: TimeInteval,
-    uiState: TimerUIStoreModel = { radius: 90, circumference: 565 }
-  ) {
+  constructor(timeInteral: TimeInteval, uiState: TimerUIStoreModel) {
+    debugger;
     this.startTime = this.convertToSeconds(timeInteral);
     this.elapsedTime = this.startTime;
     this.timerUIStore = new TimerUIStore(uiState);
     this.startTimer = this.startTimer.bind(this);
-    this.startTimer();
+    //this.startTimer();
   }
 
   @action
