@@ -1,4 +1,3 @@
-import TimerUIStore, { TimerUIStoreModel } from "./timer-ui-store";
 import { action, computed, observable } from "mobx";
 
 export interface TimeInteval {
@@ -8,18 +7,16 @@ export interface TimeInteval {
 }
 
 class TimerStore {
-  @observable timerUIStore: TimerUIStore;
   @observable startTime: number = 0;
   @observable elapsedTime: number = 0;
+  @observable circleRadius: number = 90;
+  @observable circleCircumference: number = 565;
   timerFn: () => {};
 
-  constructor(timeInteral: TimeInteval, uiState: TimerUIStoreModel) {
-    debugger;
+  constructor(timeInteral: TimeInteval) {
     this.startTime = this.convertToSeconds(timeInteral);
     this.elapsedTime = this.startTime;
-    this.timerUIStore = new TimerUIStore(uiState);
     this.startTimer = this.startTimer.bind(this);
-    //this.startTimer();
   }
 
   @action
@@ -60,8 +57,7 @@ class TimerStore {
 
   @computed
   get getDashValue() {
-    const { startTime, elapsedTime, timerUIStore } = this;
-    const { circleCircumference } = timerUIStore;
+    const { startTime, elapsedTime, circleCircumference } = this;
     //Slight hack to make timer consistant with readable time - need better way
     let startTimeMod = startTime - 1;
     let elapsedTimeMod = elapsedTime - 1;

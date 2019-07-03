@@ -16,7 +16,7 @@ circle {
   stroke-width: 10;
   stroke: #008000;
   opacity: 0;
-  transition: stroke-dashoffset 1s linear, opacity 1s ease-in;
+  /* transition: stroke-dashoffset 1s linear, opacity 0.5s ease-in; */
 }
 
 #time-label {
@@ -25,4 +25,5 @@ circle {
   fill: red;
   margin: 0 auto;
   border: 1px solid blue;
+  opacity: 0;
 }

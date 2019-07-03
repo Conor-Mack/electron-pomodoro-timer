@@ -14,7 +14,7 @@ class TimerUIStore {
   circleRef: any = null;
 
   constructor(initialState: TimerUIStoreModel) {
-    this.circleRef = initialState.circleRef;
+    //this.circleRef = initialState.circleRef;
   }
 
   @action

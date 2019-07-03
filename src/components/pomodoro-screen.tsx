@@ -2,7 +2,6 @@ import * as React from "react";
 
 import TimerStore, { TimeInteval } from "../stores/timer-store";
 
-import { Link } from "react-router-dom";
 import PomodoroStore from "../stores/pomodoro-store";
 import { observer } from "mobx-react";
 
@@ -12,21 +11,22 @@ interface IPomodoroScreenProps {
 
 @observer
 class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
-  timerStore: TimerStore;
-
-  progressCircle: React.RefObject<SVGElement>;
-
   constructor(props) {
     super(props);
-    this.progressCircle = React.createRef<SVGElement>();
-    const timeInterval: TimeInteval = { hours: 0, minutes: 0, seconds: 15 };
-    const uiState = { circleRef: this.progressCircle };
-    this.timerStore = new TimerStore(timeInterval, uiState);
+    props.pomodoroStore.storeTimerRef(
+      React.createRef<SVGElement>(),
+      React.createRef<SVGElement>()
+    );
   }
 
   componentDidMount() {
     const { pomodoroStore } = this.props;
-    pomodoroStore.managePomodoro(this.progressCircle);
+    pomodoroStore.managePomodoro();
+  }
+
+  testClick() {
+    const { pomodoroStore } = this.props;
+    pomodoroStore.testClick();
   }
 
   render() {
@@ -34,10 +34,15 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
       getDashValue,
       getReadableTime
     } = this.props.pomodoroStore.activeTimer;
-    console.log(getDashValue, getReadableTime);
 
-    if (!!this.progressCircle.current) {
-      this.progressCircle.current.style.setProperty(
+    let { testClickBool } = this.props.pomodoroStore;
+
+    const { progressCircle, timerLabel } = this.props.pomodoroStore;
+
+    console.log("testClickBool", testClickBool);
+
+    if (!!progressCircle.current) {
+      progressCircle.current.style.setProperty(
         "stroke-dashoffset",
         getDashValue
       );
@@ -48,17 +53,19 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
         <svg>
           <circle cx="150" cy="150" r="90" fill="none" />
           <circle
-            ref={this.progressCircle}
+            ref={progressCircle}
             id="progress-circle"
             cx="150"
             cy="150"
             r="90"
             fill="none"
           />
-          <text id="time-label" x="105" y="160">
+          <text ref={timerLabel} id="time-label" x="105" y="160">
             {getReadableTime}
           </text>
         </svg>
+
+        <button onClick={() => this.testClick()}>Hi testing</button>
       </div>
     );
   }
