@@ -1,29 +1,68 @@
-svg {
+.pomodoro-svg {
   border: 1px solid red;
   height: 300px;
   width: 300px;
 }
-circle {
+.pomodoro-svg > circle {
   stroke-dashoffset: 0;
   stroke-dasharray: 565;
-  stroke: #c6c4c4;
   stroke-width: 10;
+  transform-origin: center center;
 }
 
-#progress-circle {
-  transform-origin: center center;
+.backing-circle {
+  stroke: #c6c4c4;
+}
+
+.progress-circle {
   transform: rotate(-90deg);
-  stroke-width: 10;
   stroke: #008000;
   opacity: 0;
   /* transition: stroke-dashoffset 1s linear, opacity 0.5s ease-in; */
 }
 
-#time-label {
+.time-label {
   font-family: "Courier New", Courier, monospace;
   font-size: 2em;
   fill: red;
   margin: 0 auto;
   border: 1px solid blue;
   opacity: 0;
+}
+
+.font-button-container {
+  border: 1px solid red;
+  position: absolute;
+  height: 50px;
+}
+
+.font-button-svg {
+  position: relative;
+  border: 1px solid blue;
+  height: 50px;
+  width: 50px;
+}
+
+.font-button-circle {
+  fill: red;
+}
+
+.font-button-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -9px;
+  margin-left: -7px;
+}
+
+.action-button-panel {
+  display: flex;
+  flex-flow: row nowrap;
+  border: 2px dotted red;
+  width: 300px;
+  height: 60px;
+}
+
+.action-button-panel > div {
+  flex: 1;
 }

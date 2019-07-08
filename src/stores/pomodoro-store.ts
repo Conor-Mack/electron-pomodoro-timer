@@ -9,6 +9,8 @@ class PomodoroStore {
   @observable breakTimeDuration: number = 5;
   @observable totalPomodoroSets: number | null = null;
   @observable elapsedPomodoroSets: number = 0;
+  @observable timerIsPaused = false;
+
   @observable testClickBool = false; //TODO - REMOVE ME WHEN NO LONGER NEEDED
 
   @observable activeTimer: TimerStore | null = null;
@@ -53,7 +55,6 @@ class PomodoroStore {
   async prepareTimer() {
     return new Promise(resolve => {
       setTimeout(() => {
-        let timeLabel = document.querySelector("#time-label");
         this.progressCircle.current.style.transition =
           "stroke-dashoffset 1s linear, opacity 0.5s ease-in";
         this.progressCircle.current.style.opacity = 1;
@@ -82,24 +83,40 @@ class PomodoroStore {
     this.cleanUpTimer();
   }
 
-  //TODO - Make this a little bit slicker
   cleanUpTimer() {
     this.progressCircle.current.style.transition = "none";
     this.progressCircle.current.style.opacity = 0;
-    // this.timerLabel.current.style.transition = "none";
+    this.timerLabel.current.style.transition = "none";
     this.timerLabel.current.style.opacity = 0;
+  }
+
+  @action
+  setTimerPausedState(pauseState: boolean | null) {
+    if (pauseState == null) {
+      this.timerIsPaused = !this.timerIsPaused;
+    } else {
+      this.timerIsPaused = pauseState;
+    }
   }
 
   @action
   pauseTimer() {
     const { activeTimer } = this;
     activeTimer!.pauseTimer();
+    this.timerIsPaused = true;
   }
 
   @action
   stopTimer() {
     const { activeTimer } = this;
     activeTimer!.stopTimer();
+  }
+
+  @action
+  playTimer() {
+    const { activeTimer } = this;
+    activeTimer!.startTimer();
+    this.timerIsPaused = false;
   }
 
   @action

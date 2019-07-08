@@ -32,7 +32,7 @@ class TimerStore {
   startTimer() {
     return new Promise(resolve => {
       this.timerFn = setInterval(() => {
-        if (this.elapsedTime > 1) {
+        if (this.elapsedTime > 0) {
           this.elapsedTime--;
         } else {
           this.stopTimer();
@@ -53,6 +53,11 @@ class TimerStore {
   @action
   pauseTimer() {
     clearInterval(this.timerFn);
+  }
+
+  @action
+  playTimer() {
+    //todo - implement this
   }
 
   @computed

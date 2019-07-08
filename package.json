@@ -47,18 +47,26 @@
     }
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.19",
+    "@fortawesome/free-brands-svg-icons": "^5.9.0",
+    "@fortawesome/free-solid-svg-icons": "^5.9.0",
+    "@fortawesome/react-fontawesome": "^0.1.4",
     "@types/electron-devtools-installer": "^2.0.2",
     "@types/react": "^16.8.18",
     "@types/react-dom": "^0.14.20",
+    "@types/react-fontawesome": "^1.6.4",
+    "add": "^2.0.6",
     "electron-compile": "^6.4.4",
     "electron-devtools-installer": "^2.1.0",
     "electron-squirrel-startup": "^1.0.0",
+    "font-awesome": "^4.7.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-hot-loader": "^3.0.0-beta.6",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "tslib": "^1.9.3"
+    "tslib": "^1.9.3",
+    "yarn": "^1.16.0"
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",

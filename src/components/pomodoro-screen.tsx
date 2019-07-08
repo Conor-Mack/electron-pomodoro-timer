@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { FontButton, VariableFontButton } from "./font-button";
 import TimerStore, { TimeInteval } from "../stores/timer-store";
 
 import PomodoroStore from "../stores/pomodoro-store";
@@ -29,17 +30,27 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
     pomodoroStore.testClick();
   }
 
+  stopTimer() {
+    const { pomodoroStore } = this.props;
+    pomodoroStore.stopTimer();
+  }
+
+  playPauseTimer() {
+    const { pomodoroStore } = this.props;
+    pomodoroStore.timerIsPaused
+      ? pomodoroStore.playTimer()
+      : pomodoroStore.pauseTimer();
+  }
+
   render() {
     let {
       getDashValue,
       getReadableTime
     } = this.props.pomodoroStore.activeTimer;
 
-    let { testClickBool } = this.props.pomodoroStore;
+    let { testClickBool, timerIsPaused } = this.props.pomodoroStore;
 
     const { progressCircle, timerLabel } = this.props.pomodoroStore;
-
-    console.log("testClickBool", testClickBool);
 
     if (!!progressCircle.current) {
       progressCircle.current.style.setProperty(
@@ -50,22 +61,39 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
 
     return (
       <div className="test">
-        <svg>
-          <circle cx="150" cy="150" r="90" fill="none" />
+        <svg className="pomodoro-svg">
           <circle
-            ref={progressCircle}
-            id="progress-circle"
+            className="backing-circle"
             cx="150"
             cy="150"
             r="90"
             fill="none"
           />
-          <text ref={timerLabel} id="time-label" x="105" y="160">
+          <circle
+            ref={progressCircle}
+            className="progress-circle"
+            cx="150"
+            cy="150"
+            r="90"
+            fill="none"
+          />
+          <text ref={timerLabel} className="time-label" x="105" y="160">
             {getReadableTime}
           </text>
         </svg>
-
-        <button onClick={() => this.testClick()}>Hi testing</button>
+        <div className="action-button-panel">
+          <div>
+            <VariableFontButton
+              icons={{ isTrue: "pause", isFalse: "play" }}
+              toggleValue={timerIsPaused}
+              onButtonClick={() => this.playPauseTimer()}
+            />
+          </div>
+          <div>
+            <FontButton icon="stop" onButtonClick={() => this.stopTimer()} />
+          </div>
+        </div>
+        {/* <button onClick={() => this.testClick()}>Hi testing</button> */}
       </div>
     );
   }
