@@ -1,8 +1,18 @@
 import TimerStore, { TimeInteval } from "./timer-store";
 import { action, computed, observable } from "mobx";
 
-import React from "react";
+import { IIsObservableObject } from "mobx/lib/internal";
 import { resolve } from "url";
+
+type timerTypes = "workTime" | "breakTime";
+
+class Settings {
+  @observable task: string = "Test task";
+  @observable setsAreIndeterminate: boolean = false;
+  @observable maxSets: number = 3;
+  @observable workTime: number = 45;
+  @observable breakTime: number = 15;
+}
 
 class PomodoroStore {
   @observable workTimeDuration: number = 10;
@@ -16,6 +26,13 @@ class PomodoroStore {
   @observable activeTimer: TimerStore | null = null;
   progressCircle: React.RefObject<SVGElement>;
   timerLabel: React.RefObject<SVGElement>;
+
+  @observable settings: Settings = new Settings();
+
+  @action
+  setSettingsValue(key: keyof Settings, value: string | number | boolean) {
+    this.settings[key] = value;
+  }
 
   constructor() {
     this.instantiateTimer(true);

@@ -5,9 +5,10 @@ import { icon } from "@fortawesome/fontawesome-svg-core";
 import { observer } from "mobx-react";
 
 interface IFontButtonProps {
-  icon: string; //Add icon of use to library.add in app.tsx so activate icon name by string
+  icon: string; //Add icon of use to library.add in app.tsx to activate icon name by string
   color?: string;
   onButtonClick: (buttonState?: boolean) => void;
+  style?: {};
 }
 
 interface IVariableFontButtonProps {
@@ -15,27 +16,32 @@ interface IVariableFontButtonProps {
   toggleValue: boolean;
   icons: { isTrue: string; isFalse: string };
   onButtonClick: (buttonState?: boolean) => void;
+  style?: {};
 }
 
 @observer
 export class FontButton extends React.Component<IFontButtonProps> {
   render() {
-    const { color, icon, onButtonClick } = this.props;
+    const { color, icon, onButtonClick, style } = this.props;
 
     return (
-      <div className="font-button-container">
+      <div className="font-button-container" onClick={() => onButtonClick()}>
         <svg className="font-button-svg">
-          <circle
-            r="25"
-            cx="50%"
-            cy="50%"
-            fill={color || "green"}
-            onClick={() => onButtonClick()}
-          />
+          <circle r="25" cx="50%" cy="50%" fill={"green"} />
         </svg>
-        <div className="font-button-icon">
-          <FontAwesomeIcon icon={icon} color={color} />
-        </div>
+        <FontAwesomeIcon
+          icon={icon}
+          color={color}
+          style={{
+            color: "white",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            fontSize: "20px",
+            marginTop: "-10px",
+            marginLeft: "-10px"
+          }}
+        />
       </div>
     );
   }
@@ -51,13 +57,13 @@ export class VariableFontButton extends React.Component<
     const iconRef = toggleValue ? icons.isTrue : icons.isFalse;
 
     return (
-      <div>
+      <React.Fragment>
         <FontButton
           icon={iconRef}
           color={color}
           onButtonClick={() => onButtonClick()}
         />
-      </div>
+      </React.Fragment>
     );
   }
 }

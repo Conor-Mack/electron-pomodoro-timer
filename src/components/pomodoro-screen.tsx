@@ -42,6 +42,10 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
       : pomodoroStore.pauseTimer();
   }
 
+  navigateToSettings() {
+    this.props.history.push("/settings");
+  }
+
   render() {
     let {
       getDashValue,
@@ -60,38 +64,55 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
     }
 
     return (
-      <div className="test">
-        <svg className="pomodoro-svg">
-          <circle
-            className="backing-circle"
-            cx="150"
-            cy="150"
-            r="90"
-            fill="none"
+      <div className="pomodoro-screen-container">
+        <div className="flex-1 settings-panel">
+          <FontButton
+            icon="cog"
+            color="white"
+            onButtonClick={() => this.navigateToSettings()}
           />
-          <circle
-            ref={progressCircle}
-            className="progress-circle"
-            cx="150"
-            cy="150"
-            r="90"
-            fill="none"
-          />
-          <text ref={timerLabel} className="time-label" x="105" y="160">
-            {getReadableTime}
-          </text>
-        </svg>
-        <div className="action-button-panel">
-          <div>
-            <VariableFontButton
-              icons={{ isTrue: "pause", isFalse: "play" }}
-              toggleValue={timerIsPaused}
-              onButtonClick={() => this.playPauseTimer()}
+        </div>
+        <div className="flex-1 center">Task name goes here</div>
+        <div className="flex-1">
+          <svg className="pomodoro-svg">
+            <circle
+              className="backing-circle"
+              cx="175"
+              cy="175"
+              r="120"
+              fill="none"
             />
-          </div>
-          <div>
-            <FontButton icon="stop" onButtonClick={() => this.stopTimer()} />
-          </div>
+            <circle
+              ref={progressCircle}
+              className="progress-circle"
+              cx="175"
+              cy="175"
+              r="120"
+              fill="none"
+            />
+            <text ref={timerLabel} className="time-label" x="105" y="160">
+              {getReadableTime}
+            </text>
+          </svg>
+        </div>
+        <div className="flex-1 center">4 of 5 Sets Complete</div>
+        <div className="flex-1 action-button-panel">
+          <VariableFontButton
+            icons={{ isTrue: "play", isFalse: "pause" }}
+            toggleValue={timerIsPaused}
+            onButtonClick={() => this.playPauseTimer()}
+            color="red"
+          />
+          <FontButton
+            icon="stop"
+            onButtonClick={() => this.stopTimer()}
+            color="red"
+          />
+          <FontButton
+            icon="sync"
+            onButtonClick={() => console.log("HI")}
+            color="red"
+          />
         </div>
         {/* <button onClick={() => this.testClick()}>Hi testing</button> */}
       </div>

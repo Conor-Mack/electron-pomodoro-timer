@@ -9,8 +9,8 @@ export interface TimeInteval {
 class TimerStore {
   @observable startTime: number = 0;
   @observable elapsedTime: number = 0;
-  @observable circleRadius: number = 90;
-  @observable circleCircumference: number = 565;
+  @observable circleRadius: number = 120;
+  @observable circleCircumference: number = 754;
   timerFn: () => {};
 
   constructor(timeInteral: TimeInteval) {
