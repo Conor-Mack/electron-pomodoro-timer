@@ -25,11 +25,6 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
     pomodoroStore.managePomodoro();
   }
 
-  testClick() {
-    const { pomodoroStore } = this.props;
-    pomodoroStore.testClick();
-  }
-
   stopTimer() {
     const { pomodoroStore } = this.props;
     pomodoroStore.stopTimer();
@@ -52,7 +47,15 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
       getReadableTime
     } = this.props.pomodoroStore.activeTimer;
 
-    let { testClickBool, timerIsPaused } = this.props.pomodoroStore;
+    let {
+      timerIsPaused,
+      settings,
+      elapsedPomodoroSets
+    } = this.props.pomodoroStore;
+
+    let completeSetsText = settings.setsHaveLimit
+      ? `${elapsedPomodoroSets} / ${settings.maxSets}`
+      : elapsedPomodoroSets;
 
     const { progressCircle, timerLabel } = this.props.pomodoroStore;
 
@@ -72,30 +75,34 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
             onButtonClick={() => this.navigateToSettings()}
           />
         </div>
-        <div className="flex-1 center">Task name goes here</div>
+        <div className="flex-1 center app-text">
+          <h3>{settings.task}</h3>
+        </div>
         <div className="flex-1">
           <svg className="pomodoro-svg">
             <circle
               className="backing-circle"
-              cx="175"
-              cy="175"
+              cx="165"
+              cy="165"
               r="120"
               fill="none"
             />
             <circle
               ref={progressCircle}
               className="progress-circle"
-              cx="175"
-              cy="175"
+              cx="165"
+              cy="165"
               r="120"
               fill="none"
             />
-            <text ref={timerLabel} className="time-label" x="105" y="160">
+            <text ref={timerLabel} className="time-label" x="115" y="170">
               {getReadableTime}
             </text>
           </svg>
         </div>
-        <div className="flex-1 center">4 of 5 Sets Complete</div>
+        <div className="flex-1 center app-text">
+          <h3>{`${completeSetsText} Sets Complete`}</h3>
+        </div>
         <div className="flex-1 action-button-panel">
           <VariableFontButton
             icons={{ isTrue: "play", isFalse: "pause" }}

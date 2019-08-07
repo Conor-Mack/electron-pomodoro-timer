@@ -22,18 +22,23 @@ interface IVariableFontButtonProps {
 @observer
 export class FontButton extends React.Component<IFontButtonProps> {
   render() {
-    const { color, icon, onButtonClick, style } = this.props;
+    const { icon, onButtonClick, style } = this.props;
 
     return (
       <div className="font-button-container" onClick={() => onButtonClick()}>
         <svg className="font-button-svg">
-          <circle r="25" cx="50%" cy="50%" fill={"green"} />
+          <circle
+            className="action-button"
+            r="25"
+            cx="50%"
+            cy="50%"
+            color="#ffffff"
+          />
         </svg>
         <FontAwesomeIcon
           icon={icon}
-          color={color}
           style={{
-            color: "white",
+            color: "#a2231d",
             position: "absolute",
             top: "50%",
             left: "50%",

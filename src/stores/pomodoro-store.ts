@@ -1,14 +1,9 @@
 import TimerStore, { TimeInteval } from "./timer-store";
 import { action, computed, observable } from "mobx";
 
-import { IIsObservableObject } from "mobx/lib/internal";
-import { resolve } from "url";
-
-type timerTypes = "workTime" | "breakTime";
-
 class Settings {
   @observable task: string = "Test task";
-  @observable setsAreIndeterminate: boolean = false;
+  @observable setsHaveLimit: boolean = false;
   @observable maxSets: number = 3;
   @observable workTime: number = 45;
   @observable breakTime: number = 15;
@@ -17,7 +12,7 @@ class Settings {
 class PomodoroStore {
   @observable workTimeDuration: number = 10;
   @observable breakTimeDuration: number = 5;
-  @observable totalPomodoroSets: number | null = null;
+  @observable totalPomodoroSets: number | null = 3;
   @observable elapsedPomodoroSets: number = 0;
   @observable timerIsPaused = false;
 
@@ -29,7 +24,7 @@ class PomodoroStore {
 
   @observable settings: Settings = new Settings();
 
-  @action
+  @action.bound
   setSettingsValue(key: keyof Settings, value: string | number | boolean) {
     this.settings[key] = value;
   }
@@ -46,55 +41,39 @@ class PomodoroStore {
     this.timerLabel = timerRef;
   }
 
-  //TODO - REMOVE ME WHEN NO LONGER NEEDED
-  @action
-  testClick() {
-    this.testClickBool = !this.testClickBool;
-    !this.testClickBool
-      ? (this.progressCircle.current.style.opacity = 1)
-      : (this.progressCircle.current.style.opacity = 0);
-  }
-
   @action.bound
   async instantiateTimer(isWorkTime: boolean) {
     let timeInterval: TimeInteval = isWorkTime
-      ? { seconds: this.workTimeDuration }
-      : { seconds: this.breakTimeDuration };
+      ? { minutes: this.settings.workTime }
+      : { minutes: this.settings.breakTime };
     this.activeTimer = new TimerStore(timeInterval);
   }
 
   @action
   async managePomodoro() {
-    await this.startWorkTimer();
-    await this.startBreakTimer();
+    while (this.elapsedPomodoroSets < this.totalPomodoroSets!) {
+      await this.startWorkOrBreakTimer(true);
+      await this.startWorkOrBreakTimer(false);
+      this.elapsedPomodoroSets++;
+    }
   }
 
   async prepareTimer() {
     return new Promise(resolve => {
       setTimeout(() => {
-        this.progressCircle.current.style.transition =
+        this.progressCircle.current!.style.transition =
           "stroke-dashoffset 1s linear, opacity 0.5s ease-in";
-        this.progressCircle.current.style.opacity = 1;
-        this.timerLabel.current.style.transition = "opacity 0.5s ease-in";
-        this.timerLabel.current.style.opacity = 1;
+        this.progressCircle.current!.style.opacity = "1";
+        this.timerLabel.current!.style.transition = "opacity 0.5s ease-in";
+        this.timerLabel.current!.style.opacity = "1";
         resolve();
       }, 1000);
     });
   }
 
   @action
-  async startWorkTimer() {
-    await this.prepareTimer();
-    if (!this.timerExists) {
-      this.instantiateTimer(true);
-    }
-    await this.activeTimer!.startTimer();
-    this.cleanUpTimer();
-  }
-
-  @action
-  async startBreakTimer() {
-    this.instantiateTimer(false);
+  async startWorkOrBreakTimer(isWorkTime: boolean) {
+    this.instantiateTimer(isWorkTime);
     await this.prepareTimer();
     await this.activeTimer!.startTimer();
     this.cleanUpTimer();

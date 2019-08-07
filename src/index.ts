@@ -18,10 +18,12 @@ if (isDevMode) {
 const createWindow = async () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    minWidth: 450,
-    minHeight: 600,
-    maxWidth: 450,
-    maxHeight: 600
+    height: 650,
+    width: 380,
+    minWidth: 380,
+    minHeight: 650,
+    maxWidth: 380,
+    maxHeight: 650
   });
 
   // and load the index.html of the app.

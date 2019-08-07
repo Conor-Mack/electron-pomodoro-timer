@@ -3,7 +3,7 @@ import { action, computed, observable } from "mobx";
 export interface TimeInteval {
   hours?: number;
   minutes?: number;
-  seconds: number;
+  seconds?: number;
 }
 
 class TimerStore {
@@ -22,9 +22,9 @@ class TimerStore {
   @action
   private convertToSeconds(interval: TimeInteval): number {
     const { hours, minutes, seconds } = interval;
-    let durationInSeconds = hours || 0 * 60 * 60;
-    durationInSeconds += minutes || 0 * 60;
-    durationInSeconds += seconds;
+    let durationInSeconds = !!hours ? hours * 60 * 60 : 0;
+    durationInSeconds += !!minutes ? minutes * 60 : 0;
+    durationInSeconds += !!seconds ? seconds : 0;
     return durationInSeconds;
   }
 
