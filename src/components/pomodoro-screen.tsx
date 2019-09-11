@@ -103,7 +103,7 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
           <h2>{settings.task}</h2>
         </div>
         <div className="center app-text">
-          <h3>{currentSetText}</h3>
+          <h3 style={{ color: "#e8e84b" }}>{currentSetText}</h3>
         </div>
         <div className="flex-1">
           <svg className="pomodoro-svg">

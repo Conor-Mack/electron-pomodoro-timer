@@ -97,10 +97,15 @@ class PomodoroStore {
     this.activeTimer = new TimerStore(timeInterval);
   }
 
+  @computed
+  get setLimitNotReached() {
+    return this.elapsedPomodoroSets < this.settings.maxSets!;
+  }
+
   @action
   async managePomodoro() {
     if (this.settings.setsHaveLimit) {
-      while (this.elapsedPomodoroSets < this.settings.maxSets!) {
+      while (this.setLimitNotReached) {
         await this.runPomodoroSet();
       }
     } else {
