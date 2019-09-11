@@ -7,8 +7,8 @@ class Settings {
   @observable task: string = "Test task";
   @observable setsHaveLimit: boolean = false;
   @observable maxSets: number = 3;
-  @observable workTime: number = 0.25;
-  @observable breakTime: number = 0.5;
+  @observable workTime: number = 3;
+  @observable breakTime: number = 1;
 }
 
 class PomodoroStore {

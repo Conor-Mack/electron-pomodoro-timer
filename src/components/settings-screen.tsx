@@ -1,8 +1,6 @@
 import * as React from "react";
 
-import CheckBox from "./checkbox";
 import { FontButton } from "./font-button";
-import { Link } from "react-router-dom";
 import Modal from "./modal";
 import PomodoroStore from "../stores/pomodoro-store";
 import SetInput from "./set-input";
