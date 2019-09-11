@@ -25,7 +25,7 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
 
   componentWillUnmount() {
     const { pomodoroStore } = this.props;
-    pomodoroStore.toggleTimerUITransition(false);
+    //pomodoroStore.toggleTimerUITransition(false);
   }
 
   stopTimer() {

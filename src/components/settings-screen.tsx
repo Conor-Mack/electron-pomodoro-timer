@@ -95,7 +95,7 @@ class SettingsScreen extends React.Component<ISettingsScreenProps> {
             changeHandler={(event: React.FormEvent<HTMLInputElement>) =>
               setSettingsValue("workTime", event.currentTarget.value)
             }
-            // blurValidator={() => validateTimings("workTime")}
+            blurValidator={() => validateTimings("workTime")}
           />
         </div>
 
@@ -108,7 +108,7 @@ class SettingsScreen extends React.Component<ISettingsScreenProps> {
             changeHandler={(event: React.FormEvent<HTMLInputElement>) =>
               setSettingsValue("breakTime", event.currentTarget.value)
             }
-            // blurValidator={() => validateTimings("breakTime")}
+            blurValidator={() => validateTimings("breakTime")}
           />
         </div>
         {checkSaveConfirmation && (

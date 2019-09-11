@@ -196,7 +196,7 @@ class PomodoroStore {
   async stopTimer() {
     const { activeTimer, isWorkTime } = this;
     activeTimer!.stopTimer();
-    this.cleanUpTimer();
+    // this.cleanUpTimer();
     await this.toggleTimerUITransition(false);
     this.instantiateTimer(isWorkTime);
     this.toggleTimerUITransition(true);
