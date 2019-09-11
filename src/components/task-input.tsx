@@ -13,18 +13,22 @@ class TaskInput extends React.Component<ITaskInput> {
     const { changeHandler, value } = this.props;
     return (
       <div className="flex-column task-input-container">
-        <div>
-          <span>Enter Task</span>
+        <div className="app-text">
+          <h3>Enter Task</h3>
         </div>
         <div>
-          <input
-            type="text"
-            placeholder="Task"
-            value={value}
-            onChange={(e: React.FormEvent<HTMLInputElement>) =>
-              changeHandler(e)
-            }
-          />
+          <div className="input-wrapper">
+            <input
+              className="center"
+              maxLength={60}
+              type="text"
+              placeholder="Enter Task"
+              value={value}
+              onChange={(e: React.FormEvent<HTMLInputElement>) =>
+                changeHandler(e)
+              }
+            />
+          </div>
         </div>
       </div>
     );

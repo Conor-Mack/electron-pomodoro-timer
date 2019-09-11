@@ -1,8 +1,10 @@
 import * as React from "react";
+import * as ReactDOM from "react-dom";
 
 import { FontButton, VariableFontButton } from "./font-button";
 import TimerStore, { TimeInteval } from "../stores/timer-store";
 
+import Modal from "./modal";
 import PomodoroStore from "../stores/pomodoro-store";
 import { observer } from "mobx-react";
 
@@ -14,15 +16,16 @@ interface IPomodoroScreenProps {
 class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
   constructor(props) {
     super(props);
-    props.pomodoroStore.storeTimerRef(
-      React.createRef<SVGElement>(),
-      React.createRef<SVGElement>()
-    );
   }
 
   componentDidMount() {
     const { pomodoroStore } = this.props;
     pomodoroStore.managePomodoro();
+  }
+
+  componentWillUnmount() {
+    const { pomodoroStore } = this.props;
+    pomodoroStore.toggleTimerUITransition(false);
   }
 
   stopTimer() {
@@ -33,12 +36,26 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
   playPauseTimer() {
     const { pomodoroStore } = this.props;
     pomodoroStore.timerIsPaused
-      ? pomodoroStore.playTimer()
+      ? pomodoroStore.managePomodoro()
       : pomodoroStore.pauseTimer();
   }
 
   navigateToSettings() {
+    const { pomodoroStore } = this.props;
+    pomodoroStore.pauseTimer();
     this.props.history.push("/settings");
+  }
+
+  toggleModal(value: boolean) {
+    const { pomodoroStore } = this.props;
+    pomodoroStore.pauseTimer();
+    pomodoroStore.checkResetConfirmation = value;
+  }
+
+  cancelClick(value: boolean) {
+    const { pomodoroStore } = this.props;
+    pomodoroStore.managePomodoro();
+    pomodoroStore.checkResetConfirmation = value;
   }
 
   render() {
@@ -50,21 +67,28 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
     let {
       timerIsPaused,
       settings,
-      elapsedPomodoroSets
+      checkResetConfirmation,
+      setsCompleteText,
+      isWorkTime
     } = this.props.pomodoroStore;
 
-    let completeSetsText = settings.setsHaveLimit
-      ? `${elapsedPomodoroSets} / ${settings.maxSets}`
-      : elapsedPomodoroSets;
+    const {
+      progressCircle,
+      timerLabel,
+      workBreakLabel,
+      resetAllPomodoros,
+      currentSetText
+    } = this.props.pomodoroStore;
 
-    const { progressCircle, timerLabel } = this.props.pomodoroStore;
-
+    console.log("STROKE DASH: ", getDashValue);
     if (!!progressCircle.current) {
       progressCircle.current.style.setProperty(
         "stroke-dashoffset",
         getDashValue
       );
     }
+
+    let workBreakText = isWorkTime ? "Work" : "Break";
 
     return (
       <div className="pomodoro-screen-container">
@@ -75,8 +99,11 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
             onButtonClick={() => this.navigateToSettings()}
           />
         </div>
-        <div className="flex-1 center app-text">
-          <h3>{settings.task}</h3>
+        <div className="center app-text">
+          <h2>{settings.task}</h2>
+        </div>
+        <div className="center app-text">
+          <h3>{currentSetText}</h3>
         </div>
         <div className="flex-1">
           <svg className="pomodoro-svg">
@@ -95,13 +122,21 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
               r="120"
               fill="none"
             />
-            <text ref={timerLabel} className="time-label" x="115" y="170">
+            <text
+              ref={workBreakLabel}
+              className="work-break-label"
+              x="120"
+              y="150"
+            >
+              {workBreakText}
+            </text>
+            <text ref={timerLabel} className="time-label" x="115" y="190">
               {getReadableTime}
             </text>
           </svg>
         </div>
         <div className="flex-1 center app-text">
-          <h3>{`${completeSetsText} Sets Complete`}</h3>
+          <h3>{setsCompleteText}</h3>
         </div>
         <div className="flex-1 action-button-panel">
           <VariableFontButton
@@ -117,11 +152,19 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
           />
           <FontButton
             icon="sync"
-            onButtonClick={() => console.log("HI")}
+            onButtonClick={() => this.toggleModal(true)}
             color="red"
           />
         </div>
-        {/* <button onClick={() => this.testClick()}>Hi testing</button> */}
+        {checkResetConfirmation && (
+          <Modal
+            title="Reset Pomodoro"
+            description="This will reset all completed sets and times. Do you wish to continue?"
+            noClickHandler={this.cancelClick.bind(this)}
+            clickAwayHandler={this.cancelClick.bind(this)}
+            yesClickHandler={() => resetAllPomodoros()}
+          />
+        )}
       </div>
     );
   }

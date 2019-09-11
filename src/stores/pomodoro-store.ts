@@ -1,12 +1,14 @@
 import TimerStore, { TimeInteval } from "./timer-store";
 import { action, computed, observable } from "mobx";
 
+import { createRef } from "react";
+
 class Settings {
   @observable task: string = "Test task";
   @observable setsHaveLimit: boolean = false;
   @observable maxSets: number = 3;
-  @observable workTime: number = 45;
-  @observable breakTime: number = 15;
+  @observable workTime: number = 0.25;
+  @observable breakTime: number = 0.5;
 }
 
 class PomodoroStore {
@@ -15,34 +17,80 @@ class PomodoroStore {
   @observable totalPomodoroSets: number | null = 3;
   @observable elapsedPomodoroSets: number = 0;
   @observable timerIsPaused = false;
-
-  @observable testClickBool = false; //TODO - REMOVE ME WHEN NO LONGER NEEDED
+  @observable isWorkTime: boolean = true;
 
   @observable activeTimer: TimerStore | null = null;
   progressCircle: React.RefObject<SVGElement>;
   timerLabel: React.RefObject<SVGElement>;
+  workBreakLabel: React.RefObject<SVGElement>;
 
   @observable settings: Settings = new Settings();
+  @observable intermediarySettings: Settings = new Settings();
 
-  @action.bound
-  setSettingsValue(key: keyof Settings, value: string | number | boolean) {
-    this.settings[key] = value;
-  }
+  @observable checkResetConfirmation = false;
+  @observable checkSaveConfirmation = false;
 
   constructor() {
+    this.createComponentRefs();
     this.instantiateTimer(true);
   }
 
-  storeTimerRef(
-    progressRef: React.RefObject<SVGElement>,
-    timerRef: React.RefObject<SVGElement>
-  ) {
-    this.progressCircle = progressRef;
-    this.timerLabel = timerRef;
+  @computed
+  get currentSetText() {
+    return `Set ${this.elapsedPomodoroSets + 1}`;
   }
 
   @action.bound
-  async instantiateTimer(isWorkTime: boolean) {
+  async resetAllPomodoros() {
+    this.elapsedPomodoroSets = 0;
+    this.checkResetConfirmation = false;
+    this.stopTimer();
+  }
+
+  @action.bound
+  loadIntermediarySettings() {
+    Object.assign(this.intermediarySettings, this.settings);
+  }
+
+  @action.bound
+  mergeSettings() {
+    Object.assign(this.settings, this.intermediarySettings);
+    this.intermediarySettings = new Settings();
+  }
+
+  @computed
+  get settingsHaveChanged() {
+    const { settings, intermediarySettings } = this;
+    let hasChanged = false;
+    for (let key in intermediarySettings) {
+      if (settings[key] !== intermediarySettings[key]) hasChanged = true;
+      if (hasChanged) break;
+    }
+    return hasChanged;
+  }
+
+  @action.bound
+  setSettingsValue(key: keyof Settings, value: string | number | boolean) {
+    this.intermediarySettings[key] = value;
+  }
+
+  @action.bound
+  validateTimings(key: string) {
+    if (this.settings[key] < 1) {
+      this.settings[key] = 1;
+    } else if (this.settings[key] > 60) {
+      this.settings[key] = 60;
+    }
+  }
+
+  createComponentRefs() {
+    this.progressCircle = createRef<SVGElement>();
+    this.timerLabel = createRef<SVGElement>();
+    this.workBreakLabel = createRef<SVGElement>();
+  }
+
+  @action.bound
+  instantiateTimer(isWorkTime: boolean) {
     let timeInterval: TimeInteval = isWorkTime
       ? { minutes: this.settings.workTime }
       : { minutes: this.settings.breakTime };
@@ -51,32 +99,69 @@ class PomodoroStore {
 
   @action
   async managePomodoro() {
-    while (this.elapsedPomodoroSets < this.totalPomodoroSets!) {
-      await this.startWorkOrBreakTimer(true);
-      await this.startWorkOrBreakTimer(false);
-      this.elapsedPomodoroSets++;
+    if (this.settings.setsHaveLimit) {
+      while (this.elapsedPomodoroSets < this.settings.maxSets!) {
+        await this.runPomodoroSet();
+      }
+    } else {
+      while (!this.settings.setsHaveLimit) {
+        await this.runPomodoroSet();
+      }
     }
   }
 
-  async prepareTimer() {
+  @action
+  async runPomodoroSet() {
+    if (this.isWorkTime) {
+      await this.startWorkOrBreakTimer(true);
+    }
+    await this.startWorkOrBreakTimer(false);
+    this.elapsedPomodoroSets++;
+  }
+
+  async toggleTimerUITransition(isVisible: boolean) {
     return new Promise(resolve => {
+      let { getDashValue } = this.activeTimer;
+      let transString = "opacity 0.5s ease-in";
+      this.progressCircle.current!.style.transition = transString;
+      this.timerLabel.current!.style.transition = transString;
+      this.workBreakLabel.current!.style.transition = transString;
+      //cast bool to number then string 🤮
+      this.progressCircle.current!.style.opacity = `${Number(isVisible)}`;
+      this.progressCircle.current!.style.strokeDashoffset =
+        getDashValue !== undefined ? getDashValue : 0;
+
+      this.timerLabel.current!.style.opacity = `${Number(isVisible)}`;
+      this.workBreakLabel.current!.style.opacity = `${Number(isVisible)}`;
       setTimeout(() => {
+        //reapply stroke-dashoffset transition attribute
         this.progressCircle.current!.style.transition =
           "stroke-dashoffset 1s linear, opacity 0.5s ease-in";
-        this.progressCircle.current!.style.opacity = "1";
-        this.timerLabel.current!.style.transition = "opacity 0.5s ease-in";
-        this.timerLabel.current!.style.opacity = "1";
         resolve();
       }, 1000);
     });
   }
 
+  @computed
+  get timerAlreadyInProgress() {
+    return (
+      this.activeTimer !== null &&
+      (this.activeTimer!.elapsedTime < this.activeTimer!.startTime &&
+        this.activeTimer.elapsedTime !== 0)
+    );
+  }
+
   @action
   async startWorkOrBreakTimer(isWorkTime: boolean) {
-    this.instantiateTimer(isWorkTime);
-    await this.prepareTimer();
+    this.isWorkTime = isWorkTime;
+    if (!this.timerAlreadyInProgress) {
+      this.instantiateTimer(isWorkTime);
+    }
+    await this.toggleTimerUITransition(true);
+    this.timerIsPaused = false;
     await this.activeTimer!.startTimer();
-    this.cleanUpTimer();
+    await this.toggleTimerUITransition(false);
+    if (!isWorkTime) this.isWorkTime = true;
   }
 
   cleanUpTimer() {
@@ -103,9 +188,14 @@ class PomodoroStore {
   }
 
   @action
-  stopTimer() {
-    const { activeTimer } = this;
+  async stopTimer() {
+    const { activeTimer, isWorkTime } = this;
     activeTimer!.stopTimer();
+    this.cleanUpTimer();
+    await this.toggleTimerUITransition(false);
+    this.instantiateTimer(isWorkTime);
+    this.toggleTimerUITransition(true);
+    this.pauseTimer();
   }
 
   @action
@@ -123,6 +213,16 @@ class PomodoroStore {
   @computed
   get timerExists() {
     return this.activeTimer !== null;
+  }
+
+  @computed
+  get setsCompleteText() {
+    const { elapsedPomodoroSets, settings } = this;
+    return settings.setsHaveLimit
+      ? `${elapsedPomodoroSets} of ${settings.maxSets} Sets Complete`
+      : `${elapsedPomodoroSets} ${
+          elapsedPomodoroSets === 1 ? "Set Complete" : "Sets Complete"
+        }`;
   }
 }
 

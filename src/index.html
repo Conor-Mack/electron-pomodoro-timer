@@ -6,7 +6,8 @@
 
 </head>
 <body>
-  <div id="App"></div>
+  <div id="app-root"></div>
+  <div id="modal-root"></div>
 </body>
 
 <script>window.exports = module.exports</script>
@@ -17,7 +18,7 @@ import {AppContainer} from 'react-hot-loader';
 
 let render = () => {
   const { App } = require('./app');
-  ReactDOM.render(<AppContainer><App /></AppContainer>, document.getElementById('App'));
+  ReactDOM.render(<AppContainer><App /></AppContainer>, document.getElementById('app-root'));
 }
 
 render();

@@ -4,6 +4,7 @@ import { MemoryRouter, Route, Switch } from "react-router";
 
 import Help from "./Help";
 import PomodoroScreen from "./pomodoro-screen";
+import SettingsScreen from "./settings-screen";
 
 export default class RouterApp extends React.Component {
   render() {

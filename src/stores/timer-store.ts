@@ -29,12 +29,18 @@ class TimerStore {
   }
 
   @action.bound
-  startTimer() {
+  async startTimer() {
     return new Promise(resolve => {
       this.timerFn = setInterval(() => {
+        if (this.elapsedTime <= 11 && this.elapsedTime >= 1) {
+          const tock = new Audio("assetts/tock.wav");
+          // tock.play();
+        }
         if (this.elapsedTime > 0) {
           this.elapsedTime--;
         } else {
+          const beep = new Audio("assetts/beep.wav");
+          // beep.play();
           this.stopTimer();
           resolve();
         }

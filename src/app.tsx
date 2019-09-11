@@ -2,9 +2,11 @@ import * as React from "react";
 
 import { MemoryRouter, Route, Switch } from "react-router";
 import {
+  faArrowLeft,
   faCog,
   faPause,
   faPlay,
+  faSave,
   faStop,
   faSync
 } from "@fortawesome/free-solid-svg-icons";
@@ -17,7 +19,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 
-library.add(fab, faStop, faPause, faPlay, faCog, faSync);
+library.add(fab, faStop, faPause, faPlay, faCog, faSync, faSave, faArrowLeft);
 
 @observer
 export class App extends React.Component<undefined, undefined> {
