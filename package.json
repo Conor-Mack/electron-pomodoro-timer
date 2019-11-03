@@ -1,6 +1,6 @@
 {
   "name": "my-new-project",
-  "productName": "my-new-project",
+  "productName": "Pomodoro Timer",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": "src/index.ts",

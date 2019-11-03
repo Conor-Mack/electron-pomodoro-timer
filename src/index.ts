@@ -27,6 +27,8 @@ const createWindow = async () => {
     maxHeight: 650
   });
 
+  mainWindow.setMenuBarVisibility(false);
+
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 

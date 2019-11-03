@@ -16,7 +16,6 @@ interface ISettingsScreenProps {
 class SettingsScreen extends React.Component<ISettingsScreenProps> {
   constructor(props) {
     super(props);
-    console.log(props);
     props.pomodoroStore.loadIntermediarySettings();
   }
 
@@ -97,7 +96,7 @@ class SettingsScreen extends React.Component<ISettingsScreenProps> {
           />
         </div>
 
-        <div className="flex-1 border-bottom">
+        <div className="flex-1">
           <TimeSlider
             label="Break Time?"
             minTime={1}

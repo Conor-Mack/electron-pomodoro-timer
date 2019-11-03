@@ -80,7 +80,6 @@ class PomodoroScreen extends React.Component<IPomodoroScreenProps> {
       currentSetText
     } = this.props.pomodoroStore;
 
-    console.log("STROKE DASH: ", getDashValue);
     if (!!progressCircle.current) {
       progressCircle.current.style.setProperty(
         "stroke-dashoffset",
