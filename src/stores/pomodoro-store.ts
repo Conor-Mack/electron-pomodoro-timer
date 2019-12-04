@@ -151,8 +151,8 @@ class PomodoroStore {
   get timerAlreadyInProgress() {
     return (
       this.activeTimer !== null &&
-      (this.activeTimer!.elapsedTime < this.activeTimer!.startTime &&
-        this.activeTimer.elapsedTime !== 0)
+      this.activeTimer!.elapsedTime < this.activeTimer!.startTime &&
+        this.activeTimer.elapsedTime !== 0
     );
   }
 
@@ -196,7 +196,6 @@ class PomodoroStore {
   async stopTimer() {
     const { activeTimer, isWorkTime } = this;
     activeTimer!.stopTimer();
-    // this.cleanUpTimer();
     await this.toggleTimerUITransition(false);
     this.instantiateTimer(isWorkTime);
     this.toggleTimerUITransition(true);
