@@ -66,7 +66,7 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "tslib": "^1.9.3",
-    "yarn": "^1.16.0"
+    "yarn": "^1.22.0"
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
